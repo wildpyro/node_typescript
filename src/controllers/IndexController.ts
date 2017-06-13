@@ -5,6 +5,8 @@ import { schema as IndexSchema } from '../schemas/IndexSchema.mongoose';
 export class IndexController {
 
     create(req: express.Request, res: express.Response): void {
+        console.log('the request is:' + req);
+        console.log(JSON.parse(req.body));
         try {
 
             let Index: IndexInterface = <IndexInterface>req.body;
@@ -28,6 +30,7 @@ export class IndexController {
         try {
             let Index: IndexInterface = <IndexInterface>req.body;
             let _id: string = req.params._id;
+
             IndexSchema.update(_id, Index, (error, result) => {
                 if (error) {
                     res.send({ 'error': 'error' });
@@ -61,9 +64,26 @@ export class IndexController {
         }
     }
 
+    find(req: express.Request, res: express.Response): void {
+        console.log('Find me some stuff');
+        try {
+            let query = IndexSchema.find();
+            query.exec((error, result) => {
+                if (error) {
+                    res.send({ 'error': 'error' });
+                }
+                else {
+                    res.send(result);
+                }
+            });
+        } catch (e) {
+            console.log(e);
+            res.send({ 'error': 'error in your request' });
+        }
+    }
+
     findById(req: express.Request, res: express.Response): void {
         try {
-
             let _id: string = req.params._id;
             IndexSchema.findById(_id, (error, result) => {
                 if (error) {
@@ -76,7 +96,6 @@ export class IndexController {
         } catch (e) {
             console.log(e);
             res.send({ 'error': 'error in your request' });
-
         }
     }
 }

@@ -10,7 +10,7 @@ class IndexRoutes {
     }
     get routes() {
         var controller = this._indexController;
-        //router.get('/index', controller.retrieve);
+        router.get('/index', controller.find);
         router.post('/index', controller.create);
         router.put('/index/:_id', controller.update);
         router.get('/index/:_id', controller.findById);
