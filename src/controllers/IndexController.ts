@@ -5,15 +5,13 @@ import { schema as IndexSchema } from '../schemas/IndexSchema.mongoose';
 export class IndexController {
 
     create(req: express.Request, res: express.Response): void {
-        console.log('the request is:' + req);
-        console.log(JSON.parse(req.body));
         try {
-
+            console.log(req.body);
             let Index: IndexInterface = <IndexInterface>req.body;
 
             IndexSchema.create(Index, (error, result) => {
                 if (error) {
-                    res.send({ 'error': 'error' });
+                    res.status(400).send({ 'error': error });
                 }
                 else {
                     res.send({ 'success': 'success' });
@@ -21,7 +19,7 @@ export class IndexController {
             });
         } catch (e) {
             console.log(e);
-            res.send({ 'error': 'error in your request' });
+            res.status(500).send({ 'error': 'error in your request' });
 
         }
     }
@@ -33,7 +31,7 @@ export class IndexController {
 
             IndexSchema.update(_id, Index, (error, result) => {
                 if (error) {
-                    res.send({ 'error': 'error' });
+                    res.send(400, { 'error': error });
                 }
                 else {
                     res.send({ 'success': 'success' });
@@ -41,7 +39,7 @@ export class IndexController {
             });
         } catch (e) {
             console.log(e);
-            res.send({ 'error': 'error in your request' });
+            res.status(500).send({ 'error': 'error in your request' });
         }
     }
 
@@ -51,7 +49,7 @@ export class IndexController {
             let _id: string = req.params._id;
             IndexSchema.remove(_id, (error) => {
                 if (error) {
-                    res.send({ 'error': 'error' });
+                    res.status(400).send({ 'error': error });
                 }
                 else {
                     res.send({ 'success': 'success' });
@@ -59,7 +57,7 @@ export class IndexController {
             });
         } catch (e) {
             console.log(e);
-            res.send({ 'error': 'error in your request' });
+            res.status(500).send({ 'error': 'error in your request' });
 
         }
     }
@@ -70,7 +68,7 @@ export class IndexController {
             let query = IndexSchema.find();
             query.exec((error, result) => {
                 if (error) {
-                    res.send({ 'error': 'error' });
+                    res.status(400).send({ 'error': error });
                 }
                 else {
                     res.send(result);
@@ -78,7 +76,7 @@ export class IndexController {
             });
         } catch (e) {
             console.log(e);
-            res.send({ 'error': 'error in your request' });
+            res.status(500).send({ 'error': 'error in your request' });
         }
     }
 
@@ -87,7 +85,7 @@ export class IndexController {
             let _id: string = req.params._id;
             IndexSchema.findById(_id, (error, result) => {
                 if (error) {
-                    res.send({ 'error': 'error' });
+                    res.status(400).send({ 'error': error });
                 }
                 else {
                     res.send(result);
@@ -95,7 +93,7 @@ export class IndexController {
             });
         } catch (e) {
             console.log(e);
-            res.send({ 'error': 'error in your request' });
+            res.status(500).send({ 'error': 'error in your request' });
         }
     }
 }

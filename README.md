@@ -8,3 +8,6 @@ node
 
 ## Installation
 * npm install
+
+## launch mongo 
+* `mongod --dbpath /home/ben/mongodb-data/`
