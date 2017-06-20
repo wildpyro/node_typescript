@@ -1,7 +1,7 @@
 {
   "name": "node_typescript",
-  "version": "1.0.0",
-  "description": "test area for node with typescript",
+  "version": "1.0.1",
+  "description": "test area for node with typescript - specifically to play around with express routes and mongoose data models",
   "main": "tsDist/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
