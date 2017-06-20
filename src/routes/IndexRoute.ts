@@ -1,24 +1,22 @@
 import * as express from 'express';
-import { IndexController } from '../controllers/IndexController';
+import { IndexController as Controller } from '../controllers/IndexController';
 
-var router = express.Router();
 class IndexRoutes {
-    private _indexController: IndexController;
+    _indexController: Controller;
 
     constructor() {
-        this._indexController = new IndexController();
+        this._indexController = new Controller();
     }
-    get routes() {
+
+    public create(router: express.Router) {
         var controller = this._indexController;
+        router.delete('/index/:_id', controller.delete);
         router.get('/index', controller.find);
+        router.get('/index/:_id', controller.findById);
         router.post('/index', controller.create);
         router.put('/index/:_id', controller.update);
-        router.get('/index/:_id', controller.findById);
-        router.delete('/index/:_id', controller.delete);
-
-        return router;
     }
 }
 
 Object.seal(IndexRoutes);
-export = IndexRoutes;
+export let route = new IndexRoutes();

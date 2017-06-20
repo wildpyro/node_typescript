@@ -7,7 +7,8 @@ import * as express from 'express';
 import * as glob from 'glob';
 import * as mongoose from 'mongoose';
 import * as path from 'path';
-//import { IndexController } from './controllers/IndexController';
+import * as async from 'async';
+import * as indexRoute from './routes/IndexRoute';
 
 /**
  * Initialize an express instance with all the fixings
@@ -15,8 +16,10 @@ import * as path from 'path';
 class App {
 
     public express: express.Application;
+    public port: number;
 
-    constructor() {
+    constructor(port: number) {
+        this.port = port;
         this.express = express();
         this.setBodyParser();
         this.setMongoConnection();
@@ -32,12 +35,15 @@ class App {
         this.express.use(bodyParser.json());
     }
 
+    /**
+     * Set the connection to the database
+     */
     private setMongoConnection(): void {
         let uri = 'mongodb://localhost/index-test';
 
         mongoose.connect(uri, (error, result) => {
             if (error) {
-                console.log('could not connect! ' + error);
+                console.log(chalk.red('could not connect! ' + error));
             }
         });
     }
@@ -47,33 +53,34 @@ class App {
 	 */
     private resolveRoutes(): void {
 
-        let globOptions = <glob.IOptions>{ debug: false };
+        let router: express.Router;
+        router = express.Router();
 
-        //try and fix this to remove tsDist
-        let routes = glob('./tsDist/routes/*.js', globOptions, (error, results) => {
-            if (error) {
-                console.log(chalk.red('error globbing files:' + error));
-            }
+        //Add each one of these?
+        indexRoute.route.create(router);
 
-            results.forEach(routePath => {
-                require(path.resolve(routePath))();
-            });
-
-            console.log(chalk.white('resolved routes:' + results));
-        });
+        this.express.use(router);
     }
+
 }
 
-let app = new App().express;
-let port = 5000;
+async.waterfall([
+    //Should be some kind of async callback - function (error: Error, app: App, callback: async.AsyncResultCallback) {
+    function (callback: any) {
+        let app = new App(5000);
+        callback(null, app);
+    },
+    function (app: App, callback: any) {
+        app.express.listen(app.port, () => {
+            console.log(chalk.white('Your node template is running at localhost:' + app.port + ' best of luck and all that'));
+        });
 
-//this._indexController = new IndexController();
-
-/*app.route('/index')
-    .get(this._indexController.find)
-    .post(this._indexController.create);
-*/
-
-app.listen(port, () => {
-    console.log(chalk.white('Your node template is running at localhost:' + port + ' best of luck and all that'));
-});
+        callback(null, app);
+    }
+],
+    function (error: Error, app: App) {
+        if (error) {
+            console.log(chalk.red('error loading your app'));
+        }
+    }
+);

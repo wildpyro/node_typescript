@@ -6,7 +6,6 @@ export class IndexController {
 
     create(req: express.Request, res: express.Response): void {
         try {
-            console.log(req.body);
             let Index: IndexInterface = <IndexInterface>req.body;
 
             IndexSchema.create(Index, (error, result) => {
@@ -14,7 +13,7 @@ export class IndexController {
                     res.status(400).send({ 'error': error });
                 }
                 else {
-                    res.send({ 'success': 'success' });
+                    res.send({ 'success': result });
                 }
             });
         } catch (e) {
@@ -34,7 +33,7 @@ export class IndexController {
                     res.send(400, { 'error': error });
                 }
                 else {
-                    res.send({ 'success': 'success' });
+                    res.send({ 'success': result });
                 }
             });
         } catch (e) {
@@ -52,7 +51,7 @@ export class IndexController {
                     res.status(400).send({ 'error': error });
                 }
                 else {
-                    res.send({ 'success': 'success' });
+                    res.send({ 'success': 'successfully deleted _id: ' + _id });
                 }
             });
         } catch (e) {
@@ -63,7 +62,6 @@ export class IndexController {
     }
 
     find(req: express.Request, res: express.Response): void {
-        console.log('Find me some stuff');
         try {
             let query = IndexSchema.find();
             query.exec((error, result) => {
