@@ -13,6 +13,10 @@
     "REST"
   ],
   "author": "ben z",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/wildpyro/node_typescript.git"
+  },
   "license": "ISC",
   "dependencies": {
     "@types/async": "^2.0.40",
